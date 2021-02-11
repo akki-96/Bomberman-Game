@@ -1,23 +1,19 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-    <title>BOMBERMAN GAME</title>
-    <link rel="stylesheet" href="Style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bomberman</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-	<div align="center" class="container">
-		<h1 align="center"><strong> BOMBERMAN GAME </strong></h1>
-		 <div id="grid" class="grid-container">
-
-	     </div>
-		<h2 align="center"> SCORE : <b id="gameScore">0</b></h2>
-	  <div align="center" class="button">
-	   <button class="btn" id="resetButton" onclick="reset()"><b>RESTART GAME</b></button>
-	  </div>
-	   <h3 id="resultDisplay"> </h3>
-	</div>
-</body>
+    <div class="container">
+        <h1>BOMBERMAN</h1>
+        <div id="grid"></div>
+        <h2>SCORE : <b id="gameScore">0</b></h2>
+        <button id="resetButton" onclick="reset()">RESET</button>
+        <h1 id="resultDisplay"></h1>
+    </div>
     <script src="index.js"></script>
+</body>
 </html>
-
