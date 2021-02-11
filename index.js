@@ -1,141 +1,96 @@
+let row = 9;
+let col = 9;
+let numberOfBomb = 10;
+window.random = [];
+let points = 0;
 
-const random = [];
-let count = 0;
-for(let i=0; i<10; i++)
-{
-  let temp=Math.floor(Math.random()*81)+1;  // Math.random gives the value in the range of 0 - 1 in which 0 is included while 1 is not included.
-  while(random.includes(temp))  //random.includes(temp)=> The includes() method returns true if the searchString found in the random array.
-  {
-      temp=Math.floor(Math.random()*81)+1;
-  }
-  random.push(temp);
+for (let i = 0; i < numberOfBomb; i++) {
+    let temp = Math.floor(Math.random() * 81) + 1;
+    while (window.random.includes(temp)) {
+        temp = Math.floor(Math.random() * 81) + 1;
+    }
+    window.random.push(temp);
 }
-
-for(let i=1;i<=81;i++)
-{
-    let cell=document.createElement("div");
-    cell.setAttribute("class","cell");
-    cell.setAttribute("id","cell_"+i);
-    cell.addEventListener("click",cellclicked);
-    document.getElementById("grid").appendChild(cell);
-}
-
-function cellclicked(cell)
-{
-    let c=Number(cell.target.getAttribute("id").slice(5));
-    let bc=bomb_clicked(c);
-    if(bc)
-     {
-       lost();
-     }
-    else
-     {
-        count++;
-        let score=document.getElementById("gameScore").innerHTML=count;
-        cellColorChange(c);
-     }
-    if(count==71)
-    {
-        win();
+function removeEL() {
+    for (let i = 1; i <= (row * col); i++) {
+        let cell = document.getElementById('cell_' + i);
+        cell.removeEventListener('click', clicked);
     }
 }
-
-function bomb_clicked(num)
-{
-    if(random.includes(num))
-    {
+function colourChange(x) {
+    let cell = document.getElementById('cell_' + x);
+    cell.style.backgroundColor = 'green';
+    cell.removeEventListener('click', clicked);
+}
+function showBomb() {
+    for (let i = 0; i < numberOfBomb; i++) {
+        let cell = document.getElementById('cell_' + window.random[i]);
+        cell.style.backgroundImage = 'url(https://img.icons8.com/emoji/48/000000/bomb-emoji.png)';
+        cell.style.backgroundColor = 'red';
+        cell.style.backgroundSize = 'cover';
+    }
+}
+function result(msg) {
+    removeEL();
+    showBomb();
+    if (msg == 'win') {
+        document.getElementById('resultDisplay').innerHTML = 'WIN!!!';
+    }
+    else {
+        document.getElementById('resultDisplay').innerHTML = 'GAME OVER!!!';
+    }
+}
+function isBombClicked(x) {
+    if (window.random.includes(x)) {
         return true;
     }
-    else{
-        return false;
+    return false;
+}
+function clicked(e) {
+    let currCell = Number(e.target.getAttribute('id').substr(5));
+    let bombClicked = isBombClicked(currCell);
+    if (bombClicked) {
+        result('game over');
+    }
+    else {
+        points++;
+        document.getElementById('gameScore').innerHTML = points;
+        colourChange(currCell);
+    }
+    if (points == 71) {
+        result('win');
     }
 }
-
-function lost(){
-    removeEL();
-    showBomb();
-    document.getElementById("resultDisplay").innerHTML="Game Over!!!";
-}
-
-function win(){
-    removeEL();
-    showBomb();
-    document.getElementById("resultDisplay").innerText="Win!!!";
-}
-
-function removeEL(){
-    for(let i=1;i<=81;i++)
-    {
-        document.getElementsById("cell_"+i).removeEventListener("click",cellclicked);
-    
+function reset() {
+    for (let i = 1; i <= (row * col); i++) {
+        let cell = document.getElementById('cell_' + i);
+        cell.addEventListener('click', clicked);
+        cell.removeAttribute('style');
     }
-}
-
-function showBomb()
-{
-    for(let i=0;i<10;i++){
-         document.getElementById("cell_"+random[i]).style.backgroundImage="url(https://img.icons8.com/emoji/48/000000/bomb-emoji.png)";
-         document.getElementById("cell_"+random[i]).style.backgroundSize="cover";
-         document.getElementById("cell_"+random[i]).style.backgroundColor="rgb(255,0,0)";
+    document.getElementById('resultDisplay').innerHTML = "";
+    document.getElementById('gameScore').innerHTML = "0";
+    points = 0;
+    while (window.random.length > 0) {
+        window.random.pop();
     }
-}
-
-function cellColorChange(){
-    document.getElementById("cell_"+c).style["background-color"]="rgb(66,230,26)";
-    document.getElementById("cell_"+c).removeEventListener("click", cellclicked);
-}
-
-function reset(){
-    resetCell();
-    scoreReset();
-    addListener();
-    document.getElementById("resultDisplay").innerText="";
-}
-
-function resetCell()
-{
-    for(let i=1;i<=81;i++)
-    {
-        document.getElementById("cell_"+i).style.backgroundImage="";
-        document.getElementById("cell_"+i).removeAttribute('style');
-    }
-    while(random.length>0){
-        random.pop();
-    }
-    count=0;
-    for(let i=0;i<10;i++)
-    {
-        let temp=Math.floor(Math.random() * 81 ) + 1;
-        while(random.includes(temp))
-        {
-            temp=Math.floor(Math.random() * 81 ) + 1;
+    for (let i = 0; i < numberOfBomb; i++) {
+        let temp = Math.floor(Math.random() * 81) + 1;
+        while (window.random.includes(temp)) {
+            temp = Math.floor(Math.random() * 81) + 1;
         }
-        random.push(temp);
-    }
-    console.log(random);
-}
-
-function scoreReset(){
-    let score=document.getElementById("gameScore").innerHTML=0;
-}
-
-function addListener(){
-    for(let i=1;i<=81;i++)
-    {
-        let cell=document.getElementById("cell_"+i);
-        cell.addEventListener("click", cellclicked);
+        window.random.push(temp);
     }
 }
-
-function generateBomb(){
-    for(let i=0;i<10;i++)
-    {
-        let temp=Math.floor(Math.random() * 81 ) + 1;
-        while(random.includes(temp))
-        {
-            temp=Math.floor(Math.random() * 81 ) + 1;
-        }
-        random.push(temp);  
+for (let i = 0; i < row; i++) {
+    let newRow = document.createElement('div');
+    newRow.setAttribute('id', 'grid-row');
+    for (let j = 1; j <= col; j++) {
+        let id = (9 * i) + j;
+        let newCell = document.createElement('div');
+        newCell.className = 'grid-cell';
+        newCell.setAttribute('id', 'cell_' + id);
+        newCell.addEventListener('click', clicked);
+        newRow.appendChild(newCell);
     }
+    document.getElementById('grid').appendChild(newRow);
 }
-generateBomb();
